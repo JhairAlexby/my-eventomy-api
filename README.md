@@ -1,98 +1,271 @@
-<p align="center">
-  <a href="http://nestjs.com/" target="blank"><img src="https://nestjs.com/img/logo-small.svg" width="120" alt="Nest Logo" /></a>
-</p>
+# Eventomy API
 
-[circleci-image]: https://img.shields.io/circleci/build/github/nestjs/nest/master?token=abc123def456
-[circleci-url]: https://circleci.com/gh/nestjs/nest
+Una API REST completa para una aplicación móvil de calendario de eventos, construida con NestJS, TypeORM y PostgreSQL.
 
-  <p align="center">A progressive <a href="http://nodejs.org" target="_blank">Node.js</a> framework for building efficient and scalable server-side applications.</p>
-    <p align="center">
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/v/@nestjs/core.svg" alt="NPM Version" /></a>
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/l/@nestjs/core.svg" alt="Package License" /></a>
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/dm/@nestjs/common.svg" alt="NPM Downloads" /></a>
-<a href="https://circleci.com/gh/nestjs/nest" target="_blank"><img src="https://img.shields.io/circleci/build/github/nestjs/nest/master" alt="CircleCI" /></a>
-<a href="https://discord.gg/G7Qnnhy" target="_blank"><img src="https://img.shields.io/badge/discord-online-brightgreen.svg" alt="Discord"/></a>
-<a href="https://opencollective.com/nest#backer" target="_blank"><img src="https://opencollective.com/nest/backers/badge.svg" alt="Backers on Open Collective" /></a>
-<a href="https://opencollective.com/nest#sponsor" target="_blank"><img src="https://opencollective.com/nest/sponsors/badge.svg" alt="Sponsors on Open Collective" /></a>
-  <a href="https://paypal.me/kamilmysliwiec" target="_blank"><img src="https://img.shields.io/badge/Donate-PayPal-ff3f59.svg" alt="Donate us"/></a>
-    <a href="https://opencollective.com/nest#sponsor"  target="_blank"><img src="https://img.shields.io/badge/Support%20us-Open%20Collective-41B883.svg" alt="Support us"></a>
-  <a href="https://twitter.com/nestframework" target="_blank"><img src="https://img.shields.io/twitter/follow/nestframework.svg?style=social&label=Follow" alt="Follow us on Twitter"></a>
-</p>
-  <!--[![Backers on Open Collective](https://opencollective.com/nest/backers/badge.svg)](https://opencollective.com/nest#backer)
-  [![Sponsors on Open Collective](https://opencollective.com/nest/sponsors/badge.svg)](https://opencollective.com/nest#sponsor)-->
+## Características
 
-## Description
+- **Autenticación JWT**: Sistema completo de registro y login de usuarios
+- **Gestión de Eventos**: CRUD completo para eventos con validación de datos
+- **Filtros Avanzados**: Búsqueda por fechas, eventos próximos, eventos por mes
+- **Recordatorios**: Sistema de recordatorios configurables para eventos
+- **Documentación API**: Swagger/OpenAPI integrado
+- **Validación Global**: Validación automática de datos de entrada
+- **Manejo de Errores**: Sistema global de manejo de errores
+- **CORS**: Configuración flexible de CORS
 
-[Nest](https://github.com/nestjs/nest) framework TypeScript starter repository.
+## Tecnologías
 
-## Project setup
+- **Framework**: NestJS
+- **Base de Datos**: PostgreSQL
+- **ORM**: TypeORM
+- **Autenticación**: JWT con Passport
+- **Validación**: class-validator
+- **Documentación**: Swagger/OpenAPI
+- **Lenguaje**: TypeScript
 
-```bash
-$ pnpm install
+## Estructura del Proyecto
+
+```
+src/
+├── auth/                   # Módulo de autenticación
+│   ├── dto/               # DTOs para login y registro
+│   ├── guards/            # Guards de autenticación
+│   ├── strategies/        # Estrategias de Passport
+│   ├── auth.controller.ts
+│   ├── auth.service.ts
+│   └── auth.module.ts
+├── users/                 # Módulo de usuarios
+│   ├── entities/
+│   ├── users.service.ts
+│   └── users.module.ts
+├── events/                # Módulo de eventos
+│   ├── dto/               # DTOs para eventos
+│   ├── entities/
+│   ├── events.controller.ts
+│   ├── events.service.ts
+│   └── events.module.ts
+├── common/                # Utilidades compartidas
+│   ├── filters/           # Filtros de excepción
+│   └── interceptors/      # Interceptores
+├── config/                # Configuración
+│   └── database.config.ts
+├── app.module.ts
+└── main.ts
 ```
 
-## Compile and run the project
+## Instalación
+
+### Prerrequisitos
+
+- Node.js (v18 o superior)
+- PostgreSQL (v12 o superior)
+- pnpm (recomendado) o npm
+
+### Pasos de Instalación
+
+1. **Clonar el repositorio**
+   ```bash
+   git clone <repository-url>
+   cd my-eventomy-api
+   ```
+
+2. **Instalar dependencias**
+   ```bash
+   pnpm install
+   ```
+
+3. **Configurar variables de entorno**
+   ```bash
+   cp .env.example .env
+   ```
+   
+   Editar el archivo `.env` con tus configuraciones:
+   ```env
+   # Application Configuration
+   PORT=3000
+   NODE_ENV=development
+   API_PREFIX=api/v1
+   
+   # Database Configuration
+   DB_HOST=localhost
+   DB_PORT=5432
+   DB_USERNAME=tu_usuario
+   DB_PASSWORD=tu_contraseña
+   DB_NAME=eventomy_db
+   
+   # JWT Configuration
+   JWT_SECRET=tu-clave-secreta-jwt-muy-segura
+   JWT_EXPIRES_IN=7d
+   ```
+
+4. **Configurar la base de datos**
+   ```bash
+   # Crear la base de datos en PostgreSQL
+   createdb eventomy_db
+   ```
+
+5. **Ejecutar migraciones** (cuando estén disponibles)
+   ```bash
+   pnpm run migration:run
+   ```
+
+## Uso
+
+### Desarrollo
 
 ```bash
-# development
-$ pnpm run start
+# Modo desarrollo con hot-reload
+pnpm run start:dev
 
-# watch mode
-$ pnpm run start:dev
-
-# production mode
-$ pnpm run start:prod
+# Modo desarrollo con debug
+pnpm run start:debug
 ```
 
-## Run tests
+### Producción
 
 ```bash
-# unit tests
-$ pnpm run test
+# Construir la aplicación
+pnpm run build
 
-# e2e tests
-$ pnpm run test:e2e
-
-# test coverage
-$ pnpm run test:cov
+# Ejecutar en producción
+pnpm run start:prod
 ```
 
-## Deployment
-
-When you're ready to deploy your NestJS application to production, there are some key steps you can take to ensure it runs as efficiently as possible. Check out the [deployment documentation](https://docs.nestjs.com/deployment) for more information.
-
-If you are looking for a cloud-based platform to deploy your NestJS application, check out [Mau](https://mau.nestjs.com), our official platform for deploying NestJS applications on AWS. Mau makes deployment straightforward and fast, requiring just a few simple steps:
+### Testing
 
 ```bash
-$ pnpm install -g @nestjs/mau
-$ mau deploy
+# Tests unitarios
+pnpm run test
+
+# Tests e2e
+pnpm run test:e2e
+
+# Coverage
+pnpm run test:cov
 ```
 
-With Mau, you can deploy your application in just a few clicks, allowing you to focus on building features rather than managing infrastructure.
+## Documentación de la API
 
-## Resources
+Una vez que la aplicación esté ejecutándose, puedes acceder a la documentación interactiva de Swagger en:
 
-Check out a few resources that may come in handy when working with NestJS:
+```
+http://localhost:3000/api/docs
+```
 
-- Visit the [NestJS Documentation](https://docs.nestjs.com) to learn more about the framework.
-- For questions and support, please visit our [Discord channel](https://discord.gg/G7Qnnhy).
-- To dive deeper and get more hands-on experience, check out our official video [courses](https://courses.nestjs.com/).
-- Deploy your application to AWS with the help of [NestJS Mau](https://mau.nestjs.com) in just a few clicks.
-- Visualize your application graph and interact with the NestJS application in real-time using [NestJS Devtools](https://devtools.nestjs.com).
-- Need help with your project (part-time to full-time)? Check out our official [enterprise support](https://enterprise.nestjs.com).
-- To stay in the loop and get updates, follow us on [X](https://x.com/nestframework) and [LinkedIn](https://linkedin.com/company/nestjs).
-- Looking for a job, or have a job to offer? Check out our official [Jobs board](https://jobs.nestjs.com).
+### Endpoints Principales
 
-## Support
+#### Autenticación
 
-Nest is an MIT-licensed open source project. It can grow thanks to the sponsors and support by the amazing backers. If you'd like to join them, please [read more here](https://docs.nestjs.com/support).
+- `POST /api/v1/auth/register` - Registrar nuevo usuario
+- `POST /api/v1/auth/login` - Iniciar sesión
 
-## Stay in touch
+#### Eventos (Requiere autenticación)
 
-- Author - [Kamil Myśliwiec](https://twitter.com/kammysliwiec)
-- Website - [https://nestjs.com](https://nestjs.com/)
-- Twitter - [@nestframework](https://twitter.com/nestframework)
+- `GET /api/v1/events` - Obtener todos los eventos del usuario
+- `POST /api/v1/events` - Crear nuevo evento
+- `GET /api/v1/events/:id` - Obtener evento específico
+- `PATCH /api/v1/events/:id` - Actualizar evento
+- `DELETE /api/v1/events/:id` - Eliminar evento
+- `GET /api/v1/events/upcoming` - Obtener eventos próximos
+- `GET /api/v1/events/date-range` - Obtener eventos en rango de fechas
+- `GET /api/v1/events/month/:year/:month` - Obtener eventos por mes
 
-## License
+## Modelos de Datos
 
-Nest is [MIT licensed](https://github.com/nestjs/nest/blob/master/LICENSE).
+### Usuario
+
+```typescript
+{
+  id: string;
+  email: string;
+  firstName: string;
+  lastName: string;
+  isActive: boolean;
+  createdAt: Date;
+  updatedAt: Date;
+}
+```
+
+### Evento
+
+```typescript
+{
+  id: string;
+  title: string;
+  description?: string;
+  startDate: Date;
+  endDate: Date;
+  location?: string;
+  reminders?: ReminderType[];
+  isAllDay: boolean;
+  color: string;
+  userId: string;
+  createdAt: Date;
+  updatedAt: Date;
+}
+```
+
+### Tipos de Recordatorio
+
+```typescript
+enum ReminderType {
+  FIVE_MINUTES = 'FIVE_MINUTES',
+  FIFTEEN_MINUTES = 'FIFTEEN_MINUTES',
+  THIRTY_MINUTES = 'THIRTY_MINUTES',
+  ONE_HOUR = 'ONE_HOUR',
+  TWO_HOURS = 'TWO_HOURS',
+  ONE_DAY = 'ONE_DAY',
+  ONE_WEEK = 'ONE_WEEK'
+}
+```
+
+## Autenticación
+
+La API utiliza JWT (JSON Web Tokens) para la autenticación. Para acceder a los endpoints protegidos:
+
+1. Registra un usuario o inicia sesión
+2. Incluye el token en el header `Authorization`:
+   ```
+   Authorization: Bearer <tu-jwt-token>
+   ```
+
+## Validación de Datos
+
+La API incluye validación automática para todos los endpoints:
+
+- **Emails**: Formato válido requerido
+- **Contraseñas**: Mínimo 6 caracteres
+- **Fechas**: Formato ISO 8601
+- **Colores**: Formato hexadecimal válido
+- **Campos requeridos**: Validación automática
+
+## Manejo de Errores
+
+La API retorna errores en formato JSON consistente:
+
+```json
+{
+  "success": false,
+  "statusCode": 400,
+  "timestamp": "2024-01-15T10:30:00.000Z",
+  "path": "/api/v1/events",
+  "method": "POST",
+  "message": "Validation failed"
+}
+```
+
+## Contribución
+
+1. Fork el proyecto
+2. Crea una rama para tu feature (`git checkout -b feature/nueva-caracteristica`)
+3. Commit tus cambios (`git commit -am 'Agregar nueva característica'`)
+4. Push a la rama (`git push origin feature/nueva-caracteristica`)
+5. Abre un Pull Request
+
+## Licencia
+
+Este proyecto está bajo la Licencia MIT. Ver el archivo `LICENSE` para más detalles.
+
+## Soporte
+
+Para reportar bugs o solicitar nuevas características, por favor abre un issue en el repositorio.
